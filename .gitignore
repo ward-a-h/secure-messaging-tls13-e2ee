@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets and generated keys (never upload private keys)
+*.key
+*.pem
+certs/
+
+# TLS session secrets used for decrypting captures
+*.keylog
+sslkeys.log
+
+# OS / editor junk
+.DS_Store
+.vscode/
