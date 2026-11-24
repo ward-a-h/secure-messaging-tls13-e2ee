@@ -1,0 +1,25 @@
+digraph flows {
+  graph [rankdir=LR, bgcolor="white", pad=0.3, nodesep=0.8, ranksep=1.3, fontname="Inter",
+         label=<<FONT POINT-SIZE="12">(b) Protocol layer: what protects each hop</FONT>>, labelloc=t];
+  node [shape=plain, fontname="Inter", fontsize=11];
+  edge [fontname="Inter", fontsize=10, penwidth=1.6, dir=both];
+
+  c1 [label=<<TABLE BORDER="1" COLOR="#2a78d6" CELLBORDER="0" CELLPADDING="6" BGCOLOR="#eef4fc">
+     <TR><TD><B>Client 1</B>  10.0.1.10</TD></TR>
+     <TR><TD><FONT COLOR="#52514e">X25519 key pair (private key stays here)</FONT></TD></TR>
+     <TR><TD><FONT COLOR="#52514e">encrypts message for Client 2</FONT></TD></TR></TABLE>>];
+  srv [label=<<TABLE BORDER="1" COLOR="#eb6834" CELLBORDER="0" CELLPADDING="6" BGCOLOR="#fdf0ea">
+     <TR><TD><B>Relay server</B>  10.0.2.10:8443</TD></TR>
+     <TR><TD><FONT COLOR="#52514e">ends both TLS sessions</FONT></TD></TR>
+     <TR><TD><FONT COLOR="#52514e">reads only routing fields (type, name, to)</FONT></TD></TR>
+     <TR><TD><FONT COLOR="#52514e">forwards the body as opaque ciphertext</FONT></TD></TR></TABLE>>];
+  c2 [label=<<TABLE BORDER="1" COLOR="#2a78d6" CELLBORDER="0" CELLPADDING="6" BGCOLOR="#eef4fc">
+     <TR><TD><B>Client 2</B>  10.0.3.10</TD></TR>
+     <TR><TD><FONT COLOR="#52514e">X25519 key pair (private key stays here)</FONT></TD></TR>
+     <TR><TD><FONT COLOR="#52514e">decrypts and verifies the message</FONT></TD></TR></TABLE>>];
+
+  c1 -> srv [color="#eb6834", style=dashed, label=<<FONT COLOR="#b84a1c"><B>TLS 1.3</B> over TCP<BR/>crosses r1, transit link, r2</FONT>>];
+  srv -> c2 [color="#eb6834", style=dashed, label=<<FONT COLOR="#b84a1c"><B>TLS 1.3</B> over TCP<BR/>crosses r2</FONT>>];
+  c1 -> c2 [color="#1a8a5f", style=dotted, penwidth=2.2, constraint=false,
+            label=<<FONT COLOR="#1a8a5f"><B>End-to-end encryption</B> (PyNaCl crypto_box: X25519 + XSalsa20-Poly1305)<BR/>public keys are exchanged through the server; fingerprints let users detect a swapped key</FONT>>];
+}

@@ -1,0 +1,45 @@
+digraph topology {
+  graph [rankdir=LR, bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.55, fontname="Inter", splines=true,
+         label=<<FONT POINT-SIZE="16"><B>Secure messaging over TLS 1.3 with end-to-end encryption: routed test topology</B></FONT><BR/><FONT POINT-SIZE="12">(a) Network layer: devices, subnets and addresses</FONT><BR/><FONT POINT-SIZE="11" COLOR="#52514e">Each box is a Linux network namespace. Interfaces are named &lt;device&gt;-eth&lt;port&gt;.</FONT>>,
+         labelloc=t];
+  node  [shape=plain, fontname="Inter", fontsize=11];
+  edge  [fontname="Inter", fontsize=10, color="#52514e", penwidth=1.4, dir=none];
+
+  c1 [label=<<TABLE BORDER="1" COLOR="#2a78d6" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#eef4fc">
+      <TR><TD><B>Client 1</B> (c1)</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">client.py / bench_client.py</FONT></TD></TR>
+      <TR><TD PORT="e0">c1-eth0  10.0.1.10/24</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">gateway 10.0.1.1</FONT></TD></TR></TABLE>>];
+
+  r1 [label=<<TABLE BORDER="1" COLOR="#52514e" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#f4f3f0">
+      <TR><TD><B>Router 1</B> (r1)</TD></TR>
+      <TR><TD PORT="e0">r1-eth0  10.0.1.1/24</TD></TR>
+      <TR><TD PORT="e1">r1-eth1  10.0.12.1/30</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">10.0.2.0/24, 10.0.3.0/24 via 10.0.12.2</FONT></TD></TR></TABLE>>];
+
+  r2 [label=<<TABLE BORDER="1" COLOR="#52514e" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#f4f3f0">
+      <TR><TD><B>Router 2</B> (r2)</TD></TR>
+      <TR><TD PORT="e0">r2-eth0  10.0.12.2/30</TD></TR>
+      <TR><TD PORT="e1">r2-eth1  10.0.2.1/24</TD></TR>
+      <TR><TD PORT="e2">r2-eth2  10.0.3.1/24</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">10.0.1.0/24 via 10.0.12.1</FONT></TD></TR></TABLE>>];
+
+  srv [label=<<TABLE BORDER="1" COLOR="#eb6834" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#fdf0ea">
+      <TR><TD><B>Relay server</B> (srv)</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">server.py, TLS 1.3 on TCP 8443</FONT></TD></TR>
+      <TR><TD PORT="e0">srv-eth0  10.0.2.10/24</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">gateway 10.0.2.1</FONT></TD></TR></TABLE>>];
+
+  c2 [label=<<TABLE BORDER="1" COLOR="#2a78d6" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#eef4fc">
+      <TR><TD><B>Client 2</B> (c2)</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">client.py / echo_bot.py</FONT></TD></TR>
+      <TR><TD PORT="e0">c2-eth0  10.0.3.10/24</TD></TR>
+      <TR><TD><FONT COLOR="#52514e">gateway 10.0.3.1</FONT></TD></TR></TABLE>>];
+
+  c1:e0 -> r1:e0 [label=<<B>Subnet A</B><BR/>10.0.1.0/24>];
+  r1:e1 -> r2:e0 [label=<<B>Transit link</B><BR/>10.0.12.0/30<BR/><FONT COLOR="#c0392b">tc netem: delay / loss</FONT>>, penwidth=2.4];
+  r2:e1 -> srv:e0 [label=<<B>Subnet B</B><BR/>10.0.2.0/24>];
+  r2:e2 -> c2:e0 [dir=none, arrowhead=none, arrowtail=none, label=<<B>Subnet C</B><BR/>10.0.3.0/24>];
+
+  {rank=same; r2; c2}
+}
