@@ -328,11 +328,13 @@ Full tables: [`experiments/results/summary.md`](experiments/results/summary.md)
 
 ---
 
-## AI-use disclosure
+## Use of AI Tools
 
-<!-- Review and edit this section so it describes exactly how AI was used, according to the course policy. -->
+Claude (Anthropic) was used during this project for:
 
-Claude (Anthropic) was used as an assistant during this project. It helped design the system and the experiments, wrote drafts of the scripts and source code, explained the concepts involved, and helped debug problems that came up while running the code in WSL. Every script was run, tested and verified on the project machine, and all results, captures and measurements in this repository come from those runs.
+- Code and scripts: helping write the Python source code and the Bash scripts for the topology, packet captures and experiments, and checking them for errors. Every command was then run on the laptop in Ubuntu.
+- Debugging: finding the cause of errors in WSL, such as the clock changing, capture permission errors and file transfer problems, and suggesting fixes.
+- Explanations: explaining TLS 1.3, end-to-end encryption, tc netem and TCP retransmission behaviour, and guiding how to install the required packages and tools, use the drawing tools, and edit the report and README.
 
 ---
 
