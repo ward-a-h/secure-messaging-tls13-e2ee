@@ -30,7 +30,9 @@ Course project for **CS3001 Computer Networks**, FAST School of Computing, FAST-
 
 ## Architecture
 
-![Architecture diagram](docs/architecture.png)
+![Topology](docs/topology_packet_tracer.png)
+
+![Protocol view](docs/protocol_view.png)
 
 ### Addressing plan
 
