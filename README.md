@@ -9,6 +9,7 @@ The system runs on a real routed topology of two routers and three subnets built
 
 Course project for **CS3001 Computer Networks**, FAST School of Computing, FAST-NUCES Karachi, Fall 2026.
 
+The full write-up is in the [technical report](docs/CN_Technical_Report_Wardah_Ahmed.pdf).
 ---
 
 ## Contents
@@ -113,6 +114,7 @@ secure-messaging-tls13-e2ee/
 │   ├── crypto_e2e.py         end-to-end encryption and key fingerprints
 │   ├── server.py             relay server
 │   ├── client.py             interactive chat client
+│   ├── gui_client.py         desktop chat window (tkinter) built on the same client
 │   ├── echo_bot.py           automatic responder used by the experiments
 │   └── bench_client.py       measurement client used by the experiments
 ├── scripts/
@@ -126,7 +128,7 @@ secure-messaging-tls13-e2ee/
 │   ├── results/              raw_runs.csv, summary.csv, summary.md, environment.txt
 │   └── plots/                connection_setup.png, message_rtt.png, wire_bytes.png
 ├── captures/                 pcapng evidence for each protocol exchange
-├── docs/                     architecture diagram, topology status, capture inspections
+├── docs/                     technical report, GUI screenshots, diagrams, capture inspections
 └── requirements.txt
 ```
 
@@ -181,6 +183,18 @@ sudo ./scripts/run_in_ns.sh c2 .venv/bin/python src/client.py --name client2
 
 Type a message and press Enter. Client commands: `/peers`, `/keys`, `/quit`.
 
+**Desktop window (optional)**
+
+Instead of the terminal client, each client can run in its own window. Install tkinter once with `sudo apt install -y python3-tk`, then:
+
+```bash
+sudo ./scripts/run_in_ns.sh c1 .venv/bin/python src/gui_client.py --name client1
+sudo ./scripts/run_in_ns.sh c2 .venv/bin/python src/gui_client.py --name client2
+```
+
+The window shows the TLS version and cipher suite, your key fingerprint, the online peers with their fingerprints, and the delivery time of each message. It uses the same client code, so the security is identical to the terminal client. On WSL the window needs WSLg (Windows 11).
+
+![Desktop windows of Client 1 and Client 2](docs/gui_demo.png)
 The server log shows each relayed message as the server sees it. With end-to-end encryption on, the body is ciphertext:
 
 ```
