@@ -1,0 +1,41 @@
+
+==== Interfaces on c1 ====
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+c1-eth0@if9      UP             10.0.1.10/24 fe80::9c88:b4ff:fec6:3b5d/64 
+
+==== Interfaces on r1 ====
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+r1-eth0@if10     UP             10.0.1.1/24 fe80::cf:b9ff:fe4a:15ed/64 
+r1-eth1@if11     UP             10.0.12.1/30 fe80::bc58:2ff:fef7:4a6c/64 
+
+==== Interfaces on r2 ====
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+r2-eth0@if12     UP             10.0.12.2/30 fe80::184b:65ff:fec7:ae8d/64 
+r2-eth1@if13     UP             10.0.2.1/24 fe80::9c86:5dff:fe0a:a1e9/64 
+r2-eth2@if15     UP             10.0.3.1/24 fe80::2023:53ff:feea:b7e/64 
+
+==== Interfaces on srv ====
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+srv-eth0@if14    UP             10.0.2.10/24 fe80::642a:adff:fe4a:ef1/64 
+
+==== Interfaces on c2 ====
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+c2-eth0@if16     UP             10.0.3.10/24 fe80::a87c:54ff:fe3e:fb34/64 
+
+==== Routing table on r1 ====
+10.0.1.0/24 dev r1-eth0 proto kernel scope link src 10.0.1.1 
+10.0.2.0/24 via 10.0.12.2 dev r1-eth1 
+10.0.3.0/24 via 10.0.12.2 dev r1-eth1 
+10.0.12.0/30 dev r1-eth1 proto kernel scope link src 10.0.12.1 
+
+==== Routing table on r2 ====
+10.0.1.0/24 via 10.0.12.1 dev r2-eth0 
+10.0.2.0/24 dev r2-eth1 proto kernel scope link src 10.0.2.1 
+10.0.3.0/24 dev r2-eth2 proto kernel scope link src 10.0.3.1 
+10.0.12.0/30 dev r2-eth0 proto kernel scope link src 10.0.12.2 
+
+==== Traceroute from Client 1 (10.0.1.10) to Client 2 (10.0.3.10) ====
+traceroute to 10.0.3.10 (10.0.3.10), 30 hops max, 60 byte packets
+ 1  10.0.1.1  1.817 ms
+ 2  10.0.12.2  0.803 ms
+ 3  10.0.3.10  0.728 ms
