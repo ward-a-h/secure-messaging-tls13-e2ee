@@ -1,0 +1,11 @@
+Frame  Source     -> Destination  Message
+    9  10.0.1.10  -> 10.0.2.10    hello        name=client1 (with public key)
+   11  10.0.2.10  -> 10.0.1.10    welcome      name=client1 peers=[none]
+   21  10.0.3.10  -> 10.0.2.10    hello        name=client2 (with public key)
+   23  10.0.2.10  -> 10.0.3.10    welcome      name=client2 peers=[client1]
+   25  10.0.2.10  -> 10.0.1.10    peer_joined  name=client2
+   27  10.0.1.10  -> 10.0.2.10    send         to=client2 encrypted=True body='E1hBupHN6ff/osRA7D8Tw1/oDJUC4wQTpZeVa/0b...'
+   28  10.0.2.10  -> 10.0.3.10    deliver      from=client1 encrypted=True body='E1hBupHN6ff/osRA7D8Tw1/oDJUC4wQTpZeVa/0b...'
+   31  10.0.3.10  -> 10.0.2.10    send         to=client1 encrypted=True body='UENmAPYC3jt5nCFvuyHF8pFKLgSV7WimXVf9QvtR...'
+   32  10.0.2.10  -> 10.0.1.10    deliver      from=client2 encrypted=True body='UENmAPYC3jt5nCFvuyHF8pFKLgSV7WimXVf9QvtR...'
+   40  10.0.2.10  -> 10.0.3.10    peer_left    name=client1
