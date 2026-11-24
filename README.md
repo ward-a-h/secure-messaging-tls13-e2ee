@@ -10,6 +10,7 @@ The system runs on a real routed topology of two routers and three subnets built
 Course project for **CS3001 Computer Networks**, FAST School of Computing, FAST-NUCES Karachi, Fall 2026.
 
 The full write-up is in the [technical report](docs/CN_Technical_Report_Wardah_Ahmed.pdf).
+**Live demo:** [ward-a-h.github.io/secure-messaging-tls13-e2ee](https://ward-a-h.github.io/secure-messaging-tls13-e2ee/), an interactive simulation of the system in the browser.
 ---
 
 ## Contents
