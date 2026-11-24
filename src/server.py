@@ -13,6 +13,7 @@ Usage (inside the server namespace):
     python src/server.py                     # TLS 1.3 on 0.0.0.0:8443
     python src/server.py --plain             # plaintext TCP baseline
     python src/server.py --port 9000 --cert certs/server.crt --key certs/server.key
+    python src/server.py --log-level WARNING  # quiet mode used by the experiments
 """
 
 from __future__ import annotations
@@ -155,19 +156,23 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--cert", type=Path, default=Path("certs/server.crt"), help="server certificate file")
     parser.add_argument("--key", type=Path, default=Path("certs/server.key"), help="server private key file")
     parser.add_argument("--plain", action="store_true", help="disable TLS (plaintext baseline for experiments)")
+    parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+                        help="WARNING turns off the per-message log lines, so logging does not add to measured latency")
     return parser.parse_args()
 
 
 async def main() -> None:
     args = parse_arguments()
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s", datefmt="%H:%M:%S")
+    logging.basicConfig(level=args.log_level, format="%(asctime)s [%(name)s] %(message)s", datefmt="%H:%M:%S")
 
     tls = None if args.plain else server_context(args.cert, args.key)
     relay = RelayServer()
     server = await asyncio.start_server(relay.handle_connection, args.host, args.port, ssl=tls)
 
     mode = "plaintext TCP (baseline)" if args.plain else "TLS 1.3"
-    log.info("Relay server listening on %s:%d using %s", args.host, args.port, mode)
+    # Printed directly so it appears at every log level. The experiment
+    # runner waits for this line before starting the clients.
+    print(f"Relay server listening on {args.host}:{args.port} using {mode}", flush=True)
 
     # Stop cleanly on Ctrl+C or a termination signal.
     stop = asyncio.Event()
